@@ -139,6 +139,19 @@ describe('Hub', () => {
       });
       expect(hub.getStack()).toHaveLength(1);
     });
+
+    test('returns return value from wrapped function', () => {
+      // someFn represents an existing function
+      const someFn = () => {
+        const hub = getCurrentHub();
+        hub.setTag('key', 'value');
+        hub.captureMessage('test');
+        return 'ok';
+      };
+      const hub = new Hub();
+      const value = hub.withScope(someFn); // wraps someFn to run it in a new scope
+      expect(value).toBe('ok');
+    });
   });
 
   test('getCurrentClient', () => {
